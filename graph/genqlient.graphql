@@ -1,0 +1,42 @@
+
+
+query GetVersion {
+  version {
+    name
+    commit
+    buildDate
+  }
+}
+
+query GetCurrentUser {
+  currentUser {
+    id
+    name
+    admin
+  }
+  devices {
+    id
+    name
+    type
+    createdAt
+    activeAt
+  }
+}
+
+mutation Login($name: String!, $pass: String!, $deviceName: String!, $deviceType: DeviceType!) {
+  login(
+    username: $name
+    pass: $pass
+    deviceName: $deviceName
+    type: $deviceType
+    cookie: true
+  ) {
+    user {
+      id
+      name
+      admin
+      __typename
+    }
+    __typename
+  }
+}

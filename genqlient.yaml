@@ -1,0 +1,11 @@
+# Default genqlient config; for full documentation see:
+# https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
+schema: graph/traggo-schema.graphql
+operations:
+- graph/genqlient.graphql
+generated: graph/generated.go
+bindings:
+  Time:
+    type: time.Time
+  DateTime:
+    type: time.Time
