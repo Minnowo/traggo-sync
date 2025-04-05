@@ -33,6 +33,9 @@ format-go:
 
 format: format-go
 
+run: format-go
+	go run ./main.go -i http://localhost:3030 -u admin -p admin -t http://localhost:3031 -u admin -p admin
+
 test-go:
 	go test --race -coverprofile=coverage.txt -covermode=atomic ./...
 

@@ -37,7 +37,7 @@ func NewTraggoClient(traggoUrl string) (*TraggoHttpClient, error) {
 
 	graphClient := graphql.NewClient(url.JoinPath(GraphqlPath).String(), &httpClient)
 
-	log.Info().
+	log.Debug().
 		Str("traggo", url.String()).
 		Msg("Creating new TraggoHttpClient")
 
@@ -92,11 +92,11 @@ func (c *TraggoHttpClient) LogVersion() error {
 	}
 
 	log.Info().
-		Str("version", version.Version.Name).
+		Str("ver", version.Version.Name).
 		Str("commit", version.Version.Commit).
 		Str("built", version.Version.BuildDate).
-		Str("traggo", c.Url()).
-		Msg("Traggo information")
+		Str("host", c.Url()).
+		Msg("Traggo")
 
 	return nil
 }

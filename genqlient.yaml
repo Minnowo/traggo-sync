@@ -9,3 +9,10 @@ bindings:
     type: time.Time
   DateTime:
     type: time.Time
+
+  TimeSpan:
+    type: github.com/minnowo/traggo-sync/graph.TimeSpan
+  TimeSpanTag:
+    type: github.com/minnowo/traggo-sync/graph.TimeSpanTag
+  InputTimeSpanTag:
+    type: github.com/minnowo/traggo-sync/graph.TimeSpanTag

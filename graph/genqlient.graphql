@@ -23,6 +23,38 @@ query GetCurrentUser {
   }
 }
 
+query GetAllTags {
+    tags {
+        color
+        key
+        usages
+    }
+}
+query GetTimeSpans($from: Time, $to: Time) {
+    timeSpans(
+        fromInclusive: $from
+        toInclusive: $to
+    ) {
+        timeSpans {
+            id
+            start
+            end
+            oldStart
+            note
+            tags {
+                key
+                value
+            }
+        }
+        cursor {
+            hasMore
+            offset
+            startId
+            pageSize
+        }
+    }
+}
+
 mutation Login($name: String!, $pass: String!, $deviceName: String!, $deviceType: DeviceType!) {
   login(
     username: $name
@@ -39,4 +71,34 @@ mutation Login($name: String!, $pass: String!, $deviceName: String!, $deviceType
     }
     __typename
   }
+}
+
+mutation CreateTag($key: String!, $color: String!) {
+    createTag(
+        key: $key, 
+        color: $color
+    ) {
+        key
+    } 
+}
+
+mutation CreateTimeSpan($start: Time!, $end: Time, 
+    $tags: [InputTimeSpanTag!]!,
+    $note: String!) {
+
+    createTimeSpan(
+        start: $start
+        end: $end
+        tags: $tags
+        note: $note
+    ) {
+        id
+        start
+        end
+        note
+        tags {
+            key
+            value
+        }
+    }
 }
