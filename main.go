@@ -27,6 +27,7 @@ var TIME_FORMATS = []string{
 	"2006-01-02",
 }
 
+
 func CLIDeleteMain(ctx context.Context, c *cli.Command) error {
 	return fmt.Errorf("Comming soon")
 }
@@ -187,6 +188,9 @@ func main() {
 	logging.InitFromEnv()
 
 	cmd := &cli.Command{
+        Name: "Traggo Sync",
+        // Description: "A tool for syncing data between Traggo servers",
+        Usage: "A tool for syncing data between Traggo servers",
 		Commands: []*cli.Command{
 			{
 				Name:        "examples",
@@ -196,11 +200,6 @@ func main() {
 			{
 				Name:        "time",
 				Description: "Shows the various time formats for the --time-start and --time-end flags with examples.",
-				Action:      CLITimeMain,
-			},
-			{
-				Name:        "delete",
-				Description: "Delete data from a Traggo server",
 				Action:      CLITimeMain,
 			},
 			{
