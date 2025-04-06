@@ -27,7 +27,11 @@ var TIME_FORMATS = []string{
 	"2006-01-02",
 }
 
-func CLIShowExamples(ctx context.Context, c *cli.Command) error {
+func CLIDeleteMain(ctx context.Context, c *cli.Command) error {
+	return fmt.Errorf("Comming soon")
+}
+
+func CLIExamplesMain(ctx context.Context, c *cli.Command) error {
 
 	fmt.Println()
 	fmt.Println()
@@ -67,7 +71,8 @@ func CLIShowExamples(ctx context.Context, c *cli.Command) error {
 
 	return nil
 }
-func CLITime(ctx context.Context, c *cli.Command) error {
+
+func CLITimeMain(ctx context.Context, c *cli.Command) error {
 
 	fmt.Println("Time formats supported for time ranges")
 	fmt.Println()
@@ -105,7 +110,7 @@ func CLITime(ctx context.Context, c *cli.Command) error {
 	return nil
 }
 
-func CLIMain(c context.Context, cli *cli.Command) error {
+func CLISyncMain(c context.Context, cli *cli.Command) error {
 
 	targetStrs := cli.Value("target").([]string)
 	userStrs := cli.Value("user").([]string)
@@ -183,16 +188,22 @@ func main() {
 			{
 				Name:        "examples",
 				Description: "Shows some examples of the sync command",
-				Action:      CLIShowExamples,
+				Action:      CLIExamplesMain,
 			},
 			{
 				Name:        "time",
 				Description: "Shows the various time formats for the --time-start and --time-end flags with examples.",
-				Action:      CLITime,
+				Action:      CLITimeMain,
 			},
 			{
-				Name:   "sync",
-				Action: CLIMain,
+				Name:        "delete",
+				Description: "Delete data from a Traggo server",
+				Action:      CLITimeMain,
+			},
+			{
+				Name:        "sync",
+				Description: "Sync from one Traggo server to another",
+				Action:      CLISyncMain,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:     "source",

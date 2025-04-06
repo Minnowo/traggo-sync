@@ -83,7 +83,7 @@ func SyncFrom(run RunConfig) error {
 			err = syncer.SyncTags(tagSync)
 
 			if err != nil {
-				log.Warn().Err(err).Msg("error while syncing tags")
+				log.Error().Err(err).Msg("error while syncing tags")
 			}
 		}
 
@@ -92,7 +92,10 @@ func SyncFrom(run RunConfig) error {
 			start := run.StartTime
 			end := run.EndTime
 
-			syncer.SyncTimespansInRange(start, end)
+			err = syncer.SyncTimespansInRange(start, end)
+			if err != nil {
+				log.Error().Err(err).Msg("error while syncing timespans")
+			}
 		}
 	}
 

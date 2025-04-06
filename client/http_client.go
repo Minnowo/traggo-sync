@@ -62,7 +62,7 @@ func (c *TraggoHttpClient) Login(username, password string) error {
 
 	var res *graph.LoginResponse
 
-	res, err := graph.Login(context.Background(), c.Ql(), username, password, ClientName, graph.DeviceTypeLongexpiry)
+	res, err := graph.Login(context.Background(), c.Ql(), username, password, ClientName, graph.DeviceTypeShortexpiry)
 
 	if err != nil {
 
