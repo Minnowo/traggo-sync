@@ -20,10 +20,20 @@ func (s *Syncer) SyncDashboards() error {
 	for _, dash := range res.Dashboards {
 
 		log.Info().Str("name", dash.Name).Msg("creating dashboard")
-		cRes, err := graph.CreateDashboard(s.ctx, s.T.Ql(), dash.Name)
+
+		var err error
+		var cRes *graph.CreateDashboardResponse
+
+		if s.DryRun {
+			err = nil
+			cRes = &graph.CreateDashboardResponse{CreateDashboard: graph.CreateDashboardCreateDashboard{Id: dash.Id}}
+		} else {
+			cRes, err = graph.CreateDashboard(s.ctx, s.T.Ql(), dash.Name)
+		}
 
 		if err != nil {
-			return err
+			log.Warn().Err(err).Msg("could not create dashboard")
+			continue
 		}
 
 		rangeMap := make(map[int]int)
@@ -31,10 +41,20 @@ func (s *Syncer) SyncDashboards() error {
 		for _, rang := range dash.Ranges {
 
 			log.Info().Str("name", rang.Name).Msg("adding range")
-			rangeRes, err := graph.AddDashboardRange(s.ctx, s.T.Ql(), cRes.CreateDashboard.Id, rang.ToInputNamedDateRange())
+
+			var err error
+			var rangeRes *graph.AddDashboardRangeResponse
+
+			if s.DryRun {
+				err = nil
+				rangeRes = &graph.AddDashboardRangeResponse{AddDashboardRange: graph.NamedDateRange{Id: rang.Id}}
+			} else {
+				rangeRes, err = graph.AddDashboardRange(s.ctx, s.T.Ql(), cRes.CreateDashboard.Id, rang.ToInputNamedDateRange())
+			}
 
 			if err != nil {
-				return err
+                log.Warn().Err(err).Msg("error creating range")
+                continue
 			}
 
 			rangeMap[rang.Id] = rangeRes.AddDashboardRange.Id
@@ -43,19 +63,33 @@ func (s *Syncer) SyncDashboards() error {
 		for _, entry := range dash.Items {
 
 			log.Info().Str("name", entry.Title).Msg("adding entry")
-			sel := graph.InputStatsSelection(entry.StatsSelection)
-			sel.RangeId = rangeMap[sel.RangeId]
 
-			_, err := graph.AddDashboardEntry(s.ctx, s.T.Ql(),
-				cRes.CreateDashboard.Id,
-				entry.EntryType,
-				entry.Title,
-				entry.Total,
-				sel,
-				entry.Pos.ToInputResponsiveDashboardEntryPos(),
-			)
+			var err error
+
+			if s.DryRun {
+				err = nil
+			} else {
+                sel := graph.InputStatsSelection(entry.StatsSelection)
+                id, ok := rangeMap[sel.RangeId]
+
+                if !ok {
+                    log.Warn().Msg("Could not find range id for this dashboard entry, skippping...")
+                    continue
+                }
+                sel.RangeId = id
+
+				_, err = graph.AddDashboardEntry(s.ctx, s.T.Ql(),
+					cRes.CreateDashboard.Id,
+					entry.EntryType,
+					entry.Title,
+					entry.Total,
+					sel,
+					entry.Pos.ToInputResponsiveDashboardEntryPos(),
+				)
+			}
+
 			if err != nil {
-				return err
+                log.Warn().Err(err).Msg("error creating dashboard entry")
 			}
 		}
 
