@@ -13,6 +13,7 @@ type Syncer struct {
 	ctx      context.Context
 	F        *client.TraggoHttpClient
 	T        *client.TraggoHttpClient
+	DryRun   bool
 	start    time.Time
 	duration time.Duration
 }

@@ -223,6 +223,22 @@ type LoginResponse struct {
 // GetLogin returns LoginResponse.Login, and is useful for accessing the field via an interface.
 func (v *LoginResponse) GetLogin() LoginLogin { return v.Login }
 
+// UpdateTagResponse is returned by UpdateTag on success.
+type UpdateTagResponse struct {
+	UpdateTag UpdateTagUpdateTagTagDefinition `json:"updateTag"`
+}
+
+// GetUpdateTag returns UpdateTagResponse.UpdateTag, and is useful for accessing the field via an interface.
+func (v *UpdateTagResponse) GetUpdateTag() UpdateTagUpdateTagTagDefinition { return v.UpdateTag }
+
+// UpdateTagUpdateTagTagDefinition includes the requested fields of the GraphQL type TagDefinition.
+type UpdateTagUpdateTagTagDefinition struct {
+	Key string `json:"key"`
+}
+
+// GetKey returns UpdateTagUpdateTagTagDefinition.Key, and is useful for accessing the field via an interface.
+func (v *UpdateTagUpdateTagTagDefinition) GetKey() string { return v.Key }
+
 // __CreateTagInput is used internally by genqlient
 type __CreateTagInput struct {
 	Key   string `json:"key"`
@@ -286,6 +302,18 @@ func (v *__LoginInput) GetDeviceName() string { return v.DeviceName }
 
 // GetDeviceType returns __LoginInput.DeviceType, and is useful for accessing the field via an interface.
 func (v *__LoginInput) GetDeviceType() DeviceType { return v.DeviceType }
+
+// __UpdateTagInput is used internally by genqlient
+type __UpdateTagInput struct {
+	Key   string `json:"key"`
+	Color string `json:"color"`
+}
+
+// GetKey returns __UpdateTagInput.Key, and is useful for accessing the field via an interface.
+func (v *__UpdateTagInput) GetKey() string { return v.Key }
+
+// GetColor returns __UpdateTagInput.Color, and is useful for accessing the field via an interface.
+func (v *__UpdateTagInput) GetColor() string { return v.Color }
 
 // The query or mutation executed by CreateTag.
 const CreateTag_Operation = `
@@ -567,6 +595,43 @@ func Login(
 	var err_ error
 
 	var data_ LoginResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
+
+// The query or mutation executed by UpdateTag.
+const UpdateTag_Operation = `
+mutation UpdateTag ($key: String!, $color: String!) {
+	updateTag(key: $key, newKey: $key, color: $color) {
+		key
+	}
+}
+`
+
+func UpdateTag(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	key string,
+	color string,
+) (*UpdateTagResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "UpdateTag",
+		Query:  UpdateTag_Operation,
+		Variables: &__UpdateTagInput{
+			Key:   key,
+			Color: color,
+		},
+	}
+	var err_ error
+
+	var data_ UpdateTagResponse
 	resp_ := &graphql.Response{Data: &data_}
 
 	err_ = client_.MakeRequest(

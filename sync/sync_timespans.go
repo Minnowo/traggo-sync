@@ -15,20 +15,8 @@ type ComparableTimeSpan struct {
 	Tags  map[string]string
 }
 
-func ComparableTimeSpanFromGQL(ts graph.TimeSpan) ComparableTimeSpan {
-	tags := make(map[string]string)
-	for _, tag := range ts.Tags {
-		tags[tag.Key] = tag.Value
-	}
-	return ComparableTimeSpan{
-		Start: ts.Start,
-		End:   ts.End,
-		Note:  ts.Note,
-		Tags:  tags,
-	}
-}
 func (t *ComparableTimeSpan) Eq(o *ComparableTimeSpan) bool {
-	if !(t.Start == o.Start && t.End == o.End && t.Note == o.Note) {
+	if t.Start != o.Start || t.End != o.End || t.Note != o.Note {
 		return false
 	}
 	if len(t.Tags) != len(o.Tags) {
@@ -42,6 +30,19 @@ func (t *ComparableTimeSpan) Eq(o *ComparableTimeSpan) bool {
 		}
 	}
 	return true
+}
+
+func ComparableTimeSpanFromGQL(ts graph.TimeSpan) ComparableTimeSpan {
+	tags := make(map[string]string)
+	for _, tag := range ts.Tags {
+		tags[tag.Key] = tag.Value
+	}
+	return ComparableTimeSpan{
+		Start: ts.Start,
+		End:   ts.End,
+		Note:  ts.Note,
+		Tags:  tags,
+	}
 }
 
 func (s *Syncer) SyncTimespansInRange(from, to time.Time) error {
@@ -66,17 +67,25 @@ func (s *Syncer) SyncTimespansInRange(from, to time.Time) error {
 		return err
 	}
 
+	log.Info().Int("count", len(fTimes.TimeSpans.TimeSpans)).Msg("Found source timespans")
+	log.Info().Int("count", len(tTimes.TimeSpans.TimeSpans)).Msg("Found target timespans")
+
+	failed := 0
+	created := 0
+	skipped := 0
+
 	oCompObjs := make([]ComparableTimeSpan, len(tTimes.TimeSpans.TimeSpans))
-	for j, t := range fTimes.TimeSpans.TimeSpans {
+
+	for i, o := range tTimes.TimeSpans.TimeSpans {
+		oCompObjs[i] = ComparableTimeSpanFromGQL(o)
+	}
+
+	for _, t := range fTimes.TimeSpans.TimeSpans {
 
 		tComp := ComparableTimeSpanFromGQL(t)
 		shouldSync := true
 
-		for i, o := range tTimes.TimeSpans.TimeSpans {
-
-			if j == 0 {
-				oCompObjs[i] = ComparableTimeSpanFromGQL(o)
-			}
+		for i := 0; i < len(oCompObjs); i++ {
 
 			if oCompObjs[i].Eq(&tComp) {
 				shouldSync = false
@@ -85,28 +94,42 @@ func (s *Syncer) SyncTimespansInRange(from, to time.Time) error {
 		}
 
 		if !shouldSync {
+			skipped++
 			continue
 		}
 
 		arr := zerolog.Arr()
 		for _, tTags := range t.Tags {
-			arr.Str(tTags.Key + tTags.Value)
+			arr.Str(tTags.Key + ":" + tTags.Value)
 		}
 		log.Info().
 			Str("start", t.Start.String()).
 			Str("end", t.End.String()).
 			Array("tags", arr).
-			Msg("")
+			Msg("creating timespan")
 
-		_, err := graph.CreateTimeSpan(s.ctx, s.T.Ql(), t.Start, t.End, t.Tags, t.Note)
+		var err error
+
+		if s.DryRun {
+			err = nil
+		} else {
+			_, err = graph.CreateTimeSpan(s.ctx, s.T.Ql(), t.Start, t.End, t.Tags, t.Note)
+		}
+
 		if err != nil {
 			log.Warn().Err(err).Msg("error creating timespan")
+			failed++
+		} else {
+			created++
 		}
 	}
 
 	s.Stop()
 	s.Info().
 		Str("took", s.duration.String()).
+		Int("created", created).
+		Int("skipped", skipped).
+		Int("failed", failed).
 		Msg("Syncing timespans finished")
 
 	return nil

@@ -82,6 +82,16 @@ mutation CreateTag($key: String!, $color: String!) {
     } 
 }
 
+mutation UpdateTag($key: String!, $color: String!) {
+    updateTag(
+        key: $key,
+        newKey: $key,
+        color: $color
+    ) {
+        key
+    }
+}
+
 mutation CreateTimeSpan($start: Time!, $end: Time, 
     $tags: [InputTimeSpanTag!]!,
     $note: String!) {

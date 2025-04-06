@@ -2,14 +2,20 @@ package sync
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/rs/zerolog/log"
 )
 
 type RunConfig struct {
-	DryRun bool
-	From   TraggoServer
-	To     []TraggoServer
+	DryRun           bool
+	MissingTags      bool
+	AllTags          bool
+	MissingTimespans bool
+	StartTime        time.Time
+	EndTime          time.Time
+	From             TraggoServer
+	To               []TraggoServer
 }
 
 func (rc *RunConfig) Validate() error {
@@ -45,5 +51,10 @@ func (rc *RunConfig) Validate() error {
 		}
 
 	}
+
+	if rc.StartTime.After(rc.EndTime) {
+		return fmt.Errorf("Start time range is after the end time range")
+	}
+
 	return nil
 }

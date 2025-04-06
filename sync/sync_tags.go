@@ -15,7 +15,7 @@ func TagsToMap(tags []graph.GetAllTagsTagsTagDefinition) map[string]int {
 	return m
 }
 
-func (s *Syncer) SyncTags() error {
+func (s *Syncer) SyncTags(syncMethod TagSyncMode) error {
 
 	s.Info().Msg("Syncting tags")
 	s.Start()
@@ -32,7 +32,11 @@ func (s *Syncer) SyncTags() error {
 		Str("traggo", s.T.Url()).
 		Msg("Syncing tags")
 
-	tagsCreated := 0
+	created := 0
+	updated := 0
+	skipped := 0
+	failed := 0
+
 	tTags, err := graph.GetAllTags(s.ctx, s.T.Ql())
 
 	if err != nil {
@@ -43,24 +47,54 @@ func (s *Syncer) SyncTags() error {
 
 	for _, tag := range fTags.Tags {
 
-		if _, ok := tTagMap[tag.Key]; ok {
-			continue
+		doUpdate := false
+
+		if i, ok := tTagMap[tag.Key]; ok {
+
+			if syncMethod != TAG_SYNC_ALL {
+				skipped++
+				continue
+			}
+
+			if o := tTags.Tags[i]; o.Color == tag.Color {
+				skipped++
+				continue
+			}
+
+			doUpdate = true
 		}
 
 		log.Info().Str("key", tag.Key).Str("color", tag.Color).Msg("Creating tag")
 
-		_, err := graph.CreateTag(s.ctx, s.T.Ql(), tag.Key, tag.Color)
+		var err error
+
+		if s.DryRun {
+			err = nil
+		} else {
+
+			if doUpdate {
+				_, err = graph.UpdateTag(s.ctx, s.T.Ql(), tag.Key, tag.Color)
+			} else {
+				_, err = graph.CreateTag(s.ctx, s.T.Ql(), tag.Key, tag.Color)
+			}
+		}
 
 		if err != nil {
 			log.Warn().Err(err).Msg("Could not create tag")
+			failed++
+		} else if doUpdate {
+			updated++
 		} else {
-			tagsCreated++
+			created++
 		}
 	}
 
 	s.Stop()
 	s.Info().
-		Int("tagsCreated", tagsCreated).
+		Int("created", created).
+		Int("failed", failed).
+		Int("updated", updated).
+		Int("skipped", skipped).
 		Str("took", s.duration.String()).
 		Msg("Syncing tags completed")
 

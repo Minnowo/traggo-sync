@@ -5,17 +5,26 @@ import (
 	"time"
 
 	"github.com/minnowo/traggo-sync/client"
+	"github.com/rs/zerolog/log"
 )
 
-type SyncItem int
+type TagSyncMode int
 
 const (
-	TAG_NOT_EXISTS SyncItem = iota
-	TAG_UPDATE     SyncItem = iota
-	TIMESPANS      SyncItem = iota
+	TAG_SYNC_ALL     TagSyncMode = iota
+	TAG_SYNC_MISSING TagSyncMode = iota
+)
+
+var (
+	MIN_TIME time.Time = time.Unix(0, 0)
+	MAX_TIME time.Time = time.Date(9999, 12, 31, 23, 59, 59, int(time.Nanosecond*999999999), time.UTC)
 )
 
 func SyncFrom(run RunConfig) error {
+
+	if err := run.Validate(); err != nil {
+		return err
+	}
 
 	var src *client.TraggoHttpClient
 	var dst []*client.TraggoHttpClient
@@ -53,20 +62,38 @@ func SyncFrom(run RunConfig) error {
 	for i := 0; i < len(dst); i++ {
 
 		syncer := Syncer{
-			ctx: context.Background(),
-			F:   src,
-			T:   dst[i],
+			ctx:    context.Background(),
+			F:      src,
+			T:      dst[i],
+			DryRun: run.DryRun,
 		}
-		syncer.SyncTags()
 
-		est, err := time.LoadLocation("America/New_York")
-		if err != nil {
-			return err
+		if run.AllTags || run.MissingTags {
+
+			var tagSync TagSyncMode
+
+			if run.AllTags {
+				tagSync = TAG_SYNC_ALL
+			}
+
+			if run.MissingTags {
+				tagSync = TAG_SYNC_MISSING
+			}
+
+			err = syncer.SyncTags(tagSync)
+
+			if err != nil {
+				log.Warn().Err(err).Msg("error while syncing tags")
+			}
 		}
-		start := time.Date(2024, time.December, 30, 16, 9, 53, 0, est)
-		end := time.Date(2024, time.December, 30, 21, 19, 55, 0, est)
 
-		syncer.SyncTimespansInRange(start, end)
+		if run.MissingTimespans {
+
+			start := run.StartTime
+			end := run.EndTime
+
+			syncer.SyncTimespansInRange(start, end)
+		}
 	}
 
 	return nil

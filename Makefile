@@ -23,13 +23,13 @@ generate: generate-go
 
 lint-go:
 	go vet ./...
-	goimports -l $(shell find . -type f -name '*.go' -not -path "./graph/*")
+	goimports -l $(shell find . -type f -name '*.go' -not -path "./graph/generated.go")
 
 lint: lint-go
 
 format-go:
-	goimports -w $(shell find . -type f -name '*.go' -not -path "./graph/*")
-	gofmt -w $(shell find . -type f -name '*.go' -not -path "./graph/*")
+	goimports -w $(shell find . -type f -name '*.go' -not -path "./graph/generated.go")
+	gofmt -w $(shell find . -type f -name '*.go' -not -path "./graph/generated.go")
 
 format: format-go
 
