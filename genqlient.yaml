@@ -4,15 +4,36 @@ schema: graph/traggo-schema.graphql
 operations:
 - graph/genqlient.graphql
 generated: graph/generated.go
+
 bindings:
   Time:
     type: time.Time
   DateTime:
     type: time.Time
-
   TimeSpan:
     type: github.com/minnowo/traggo-sync/graph.TimeSpan
   TimeSpanTag:
     type: github.com/minnowo/traggo-sync/graph.TimeSpanTag
   InputTimeSpanTag:
     type: github.com/minnowo/traggo-sync/graph.TimeSpanTag
+  Range:
+    type: github.com/minnowo/traggo-sync/graph.Range
+  RelativeOrStaticRange:
+    type: github.com/minnowo/traggo-sync/graph.RelativeOrStaticRange
+  InputDashboardEntryPos:
+    type: github.com/minnowo/traggo-sync/graph.InputDashboardEntryPos
+  DashboardEntryPos:
+    type: github.com/minnowo/traggo-sync/graph.DashboardEntryPos
+  InputStatsSelection:
+    type: github.com/minnowo/traggo-sync/graph.InputStatsSelection
+  StatsSelection:
+    type: github.com/minnowo/traggo-sync/graph.StatsSelection
+  ResponsiveDashboardEntryPos:
+      type: github.com/minnowo/traggo-sync/graph.ResponsiveDashboardEntryPos
+  InputResponsiveDashboardEntryPos:
+      type: github.com/minnowo/traggo-sync/graph.InputResponsiveDashboardEntryPos
+  InputNamedDateRange:
+      type: github.com/minnowo/traggo-sync/graph.InputNamedDateRange
+  NamedDateRange:
+      type: github.com/minnowo/traggo-sync/graph.NamedDateRange
+ 

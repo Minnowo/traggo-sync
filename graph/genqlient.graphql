@@ -55,6 +55,64 @@ query GetTimeSpans($from: Time, $to: Time) {
     }
 }
 
+
+query GetDashboards() {
+    dashboards() {
+        id
+        name
+        items {
+            id
+            title
+            entryType
+            total
+            statsSelection {
+                interval
+                tags
+                rangeId
+                excludeTags {
+                    key
+                    value
+                }
+                includeTags {
+                    key
+                    value
+                }
+                range {
+                    from
+                    to
+                }
+            }
+            pos {
+                desktop {
+                    w
+                    h
+                    x
+                    y
+                    minW
+                    minH
+                }
+                mobile {
+                    w
+                    h
+                    x
+                    y
+                    minW
+                    minH
+                }
+            }
+        }
+        ranges {
+            id
+            name
+            editable
+            range {
+                from
+                to
+            }
+        }
+    }
+}
+
 mutation Login($name: String!, $pass: String!, $deviceName: String!, $deviceType: DeviceType!) {
   login(
     username: $name
@@ -112,3 +170,67 @@ mutation CreateTimeSpan($start: Time!, $end: Time,
         }
     }
 }
+
+query GetPagedTimeSpans($from: Time, $to: Time, $cursor: InputCursor) {
+    timeSpans(
+        fromInclusive: $from
+        toInclusive: $to,
+        cursor: $cursor
+    ) {
+        timeSpans {
+            id
+            start
+            end
+            oldStart
+            note
+            tags {
+                key
+                value
+            }
+        }
+        cursor {
+            hasMore
+            offset
+            startId
+            pageSize
+        }
+    }
+}
+
+mutation RemoveTimeSpan($id: Int!) {
+    removeTimeSpan(
+        id: $id
+    ) {
+        id
+    }
+}
+
+mutation CreateDashboard($name: String!) {
+    createDashboard(
+        name: $name
+    ) {
+        id
+    }
+}
+
+mutation AddDashboardRange($dashboardId: Int!, $dateRange: InputNamedDateRange!) {
+    addDashboardRange(
+        dashboardId: $dashboardId, 
+        range: $dateRange
+    ) {
+        id
+    }
+}
+mutation AddDashboardEntry($dashboardId: Int!, $entryType: EntryType!, $title: String!, $total: Boolean!, $stats: InputStatsSelection!, $pos: InputResponsiveDashboardEntryPos) {
+    addDashboardEntry(
+            dashboardId: $dashboardId,
+            entryType: $entryType,
+            title: $title,
+            total: $total,
+            stats: $stats,
+            pos: $pos
+    ) {
+        id
+    }
+}
+

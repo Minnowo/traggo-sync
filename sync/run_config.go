@@ -12,6 +12,9 @@ type RunConfig struct {
 	MissingTags      bool
 	AllTags          bool
 	MissingTimespans bool
+	ReplaceTimespans bool
+	DeleteTimespans  bool
+	Dashboards       bool
 	StartTime        time.Time
 	EndTime          time.Time
 	From             TraggoServer

@@ -5,6 +5,13 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type TagSyncMode int
+
+const (
+	TAG_SYNC_ALL     TagSyncMode = iota
+	TAG_SYNC_MISSING TagSyncMode = iota
+)
+
 func TagsToMap(tags []graph.GetAllTagsTagsTagDefinition) map[string]int {
 
 	m := make(map[string]int, len(tags))
@@ -64,16 +71,19 @@ func (s *Syncer) SyncTags(syncMethod TagSyncMode) error {
 			doUpdate = true
 		}
 
-		log.Info().Str("key", tag.Key).Str("color", tag.Color).Msg("Creating tag")
-
 		var err error
 
-		if s.DryRun {
-			err = nil
-		} else {
-
-			if doUpdate {
+		if doUpdate {
+			log.Info().Str("key", tag.Key).Str("color", tag.Color).Msg("Updating tag")
+			if s.DryRun {
+				err = nil
+			} else {
 				_, err = graph.UpdateTag(s.ctx, s.T.Ql(), tag.Key, tag.Color)
+			}
+		} else {
+			log.Info().Str("key", tag.Key).Str("color", tag.Color).Msg("Creating tag")
+			if s.DryRun {
+				err = nil
 			} else {
 				_, err = graph.CreateTag(s.ctx, s.T.Ql(), tag.Key, tag.Color)
 			}

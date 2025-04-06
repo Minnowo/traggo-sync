@@ -8,13 +8,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type TagSyncMode int
-
-const (
-	TAG_SYNC_ALL     TagSyncMode = iota
-	TAG_SYNC_MISSING TagSyncMode = iota
-)
-
 var (
 	MIN_TIME time.Time = time.Unix(0, 0)
 	MAX_TIME time.Time = time.Date(9999, 12, 31, 23, 59, 59, int(time.Nanosecond*999999999), time.UTC)
@@ -70,31 +63,50 @@ func SyncFrom(run RunConfig) error {
 
 		if run.AllTags || run.MissingTags {
 
-			var tagSync TagSyncMode
+			var mode TagSyncMode
 
 			if run.AllTags {
-				tagSync = TAG_SYNC_ALL
+				mode = TAG_SYNC_ALL
 			}
 
 			if run.MissingTags {
-				tagSync = TAG_SYNC_MISSING
+				mode = TAG_SYNC_MISSING
 			}
 
-			err = syncer.SyncTags(tagSync)
+			err = syncer.SyncTags(mode)
 
 			if err != nil {
 				log.Error().Err(err).Msg("error while syncing tags")
 			}
 		}
 
-		if run.MissingTimespans {
+		if run.MissingTimespans || run.ReplaceTimespans {
+
+			var mode TimeSpanSyncMode
+
+			if run.ReplaceTimespans {
+				mode = TIMESPAN_SYNC_REPLACE
+			}
+			if run.MissingTimespans {
+				mode = TIMESPAN_SYNC_MISSING
+			}
 
 			start := run.StartTime
 			end := run.EndTime
 
-			err = syncer.SyncTimespansInRange(start, end)
+			err = syncer.SyncTimespansInRange(mode, start, end)
+
 			if err != nil {
 				log.Error().Err(err).Msg("error while syncing timespans")
+			}
+
+		}
+		if run.Dashboards {
+
+			err = syncer.SyncDashboards()
+
+			if err != nil {
+				log.Error().Err(err).Msg("error while syncing dashboards")
 			}
 		}
 	}

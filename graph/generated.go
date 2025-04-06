@@ -9,6 +9,50 @@ import (
 	"github.com/Khan/genqlient/graphql"
 )
 
+// AddDashboardEntryAddDashboardEntry includes the requested fields of the GraphQL type DashboardEntry.
+type AddDashboardEntryAddDashboardEntry struct {
+	Id int `json:"id"`
+}
+
+// GetId returns AddDashboardEntryAddDashboardEntry.Id, and is useful for accessing the field via an interface.
+func (v *AddDashboardEntryAddDashboardEntry) GetId() int { return v.Id }
+
+// AddDashboardEntryResponse is returned by AddDashboardEntry on success.
+type AddDashboardEntryResponse struct {
+	AddDashboardEntry AddDashboardEntryAddDashboardEntry `json:"addDashboardEntry"`
+}
+
+// GetAddDashboardEntry returns AddDashboardEntryResponse.AddDashboardEntry, and is useful for accessing the field via an interface.
+func (v *AddDashboardEntryResponse) GetAddDashboardEntry() AddDashboardEntryAddDashboardEntry {
+	return v.AddDashboardEntry
+}
+
+// AddDashboardRangeResponse is returned by AddDashboardRange on success.
+type AddDashboardRangeResponse struct {
+	AddDashboardRange NamedDateRange `json:"addDashboardRange"`
+}
+
+// GetAddDashboardRange returns AddDashboardRangeResponse.AddDashboardRange, and is useful for accessing the field via an interface.
+func (v *AddDashboardRangeResponse) GetAddDashboardRange() NamedDateRange { return v.AddDashboardRange }
+
+// CreateDashboardCreateDashboard includes the requested fields of the GraphQL type Dashboard.
+type CreateDashboardCreateDashboard struct {
+	Id int `json:"id"`
+}
+
+// GetId returns CreateDashboardCreateDashboard.Id, and is useful for accessing the field via an interface.
+func (v *CreateDashboardCreateDashboard) GetId() int { return v.Id }
+
+// CreateDashboardResponse is returned by CreateDashboard on success.
+type CreateDashboardResponse struct {
+	CreateDashboard CreateDashboardCreateDashboard `json:"createDashboard"`
+}
+
+// GetCreateDashboard returns CreateDashboardResponse.CreateDashboard, and is useful for accessing the field via an interface.
+func (v *CreateDashboardResponse) GetCreateDashboard() CreateDashboardCreateDashboard {
+	return v.CreateDashboard
+}
+
 // CreateTagCreateTagTagDefinition includes the requested fields of the GraphQL type TagDefinition.
 type CreateTagCreateTagTagDefinition struct {
 	Key string `json:"key"`
@@ -39,6 +83,17 @@ const (
 	DeviceTypeLongexpiry  DeviceType = "LongExpiry"
 	DeviceTypeShortexpiry DeviceType = "ShortExpiry"
 	DeviceTypeNoexpiry    DeviceType = "NoExpiry"
+)
+
+type EntryType string
+
+const (
+	EntryTypePiechart        EntryType = "PieChart"
+	EntryTypeBarchart        EntryType = "BarChart"
+	EntryTypeStackedbarchart EntryType = "StackedBarChart"
+	EntryTypeLinechart       EntryType = "LineChart"
+	EntryTypeVerticaltable   EntryType = "VerticalTable"
+	EntryTypeHorizontaltable EntryType = "HorizontalTable"
 )
 
 // GetAllTagsResponse is returned by GetAllTags on success.
@@ -117,6 +172,116 @@ func (v *GetCurrentUserResponse) GetCurrentUser() GetCurrentUserCurrentUser { re
 // GetDevices returns GetCurrentUserResponse.Devices, and is useful for accessing the field via an interface.
 func (v *GetCurrentUserResponse) GetDevices() []GetCurrentUserDevicesDevice { return v.Devices }
 
+// GetDashboardsDashboardsDashboard includes the requested fields of the GraphQL type Dashboard.
+type GetDashboardsDashboardsDashboard struct {
+	Id     int                                                   `json:"id"`
+	Name   string                                                `json:"name"`
+	Items  []GetDashboardsDashboardsDashboardItemsDashboardEntry `json:"items"`
+	Ranges []NamedDateRange                                      `json:"ranges"`
+}
+
+// GetId returns GetDashboardsDashboardsDashboard.Id, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboard) GetId() int { return v.Id }
+
+// GetName returns GetDashboardsDashboardsDashboard.Name, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboard) GetName() string { return v.Name }
+
+// GetItems returns GetDashboardsDashboardsDashboard.Items, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboard) GetItems() []GetDashboardsDashboardsDashboardItemsDashboardEntry {
+	return v.Items
+}
+
+// GetRanges returns GetDashboardsDashboardsDashboard.Ranges, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboard) GetRanges() []NamedDateRange { return v.Ranges }
+
+// GetDashboardsDashboardsDashboardItemsDashboardEntry includes the requested fields of the GraphQL type DashboardEntry.
+type GetDashboardsDashboardsDashboardItemsDashboardEntry struct {
+	Id             int                         `json:"id"`
+	Title          string                      `json:"title"`
+	EntryType      EntryType                   `json:"entryType"`
+	Total          bool                        `json:"total"`
+	StatsSelection StatsSelection              `json:"statsSelection"`
+	Pos            ResponsiveDashboardEntryPos `json:"pos"`
+}
+
+// GetId returns GetDashboardsDashboardsDashboardItemsDashboardEntry.Id, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboardItemsDashboardEntry) GetId() int { return v.Id }
+
+// GetTitle returns GetDashboardsDashboardsDashboardItemsDashboardEntry.Title, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboardItemsDashboardEntry) GetTitle() string { return v.Title }
+
+// GetEntryType returns GetDashboardsDashboardsDashboardItemsDashboardEntry.EntryType, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboardItemsDashboardEntry) GetEntryType() EntryType {
+	return v.EntryType
+}
+
+// GetTotal returns GetDashboardsDashboardsDashboardItemsDashboardEntry.Total, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboardItemsDashboardEntry) GetTotal() bool { return v.Total }
+
+// GetStatsSelection returns GetDashboardsDashboardsDashboardItemsDashboardEntry.StatsSelection, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboardItemsDashboardEntry) GetStatsSelection() StatsSelection {
+	return v.StatsSelection
+}
+
+// GetPos returns GetDashboardsDashboardsDashboardItemsDashboardEntry.Pos, and is useful for accessing the field via an interface.
+func (v *GetDashboardsDashboardsDashboardItemsDashboardEntry) GetPos() ResponsiveDashboardEntryPos {
+	return v.Pos
+}
+
+// GetDashboardsResponse is returned by GetDashboards on success.
+type GetDashboardsResponse struct {
+	Dashboards []GetDashboardsDashboardsDashboard `json:"dashboards"`
+}
+
+// GetDashboards returns GetDashboardsResponse.Dashboards, and is useful for accessing the field via an interface.
+func (v *GetDashboardsResponse) GetDashboards() []GetDashboardsDashboardsDashboard {
+	return v.Dashboards
+}
+
+// GetPagedTimeSpansResponse is returned by GetPagedTimeSpans on success.
+type GetPagedTimeSpansResponse struct {
+	TimeSpans GetPagedTimeSpansTimeSpansPagedTimeSpans `json:"timeSpans"`
+}
+
+// GetTimeSpans returns GetPagedTimeSpansResponse.TimeSpans, and is useful for accessing the field via an interface.
+func (v *GetPagedTimeSpansResponse) GetTimeSpans() GetPagedTimeSpansTimeSpansPagedTimeSpans {
+	return v.TimeSpans
+}
+
+// GetPagedTimeSpansTimeSpansPagedTimeSpans includes the requested fields of the GraphQL type PagedTimeSpans.
+type GetPagedTimeSpansTimeSpansPagedTimeSpans struct {
+	TimeSpans []TimeSpan                                     `json:"timeSpans"`
+	Cursor    GetPagedTimeSpansTimeSpansPagedTimeSpansCursor `json:"cursor"`
+}
+
+// GetTimeSpans returns GetPagedTimeSpansTimeSpansPagedTimeSpans.TimeSpans, and is useful for accessing the field via an interface.
+func (v *GetPagedTimeSpansTimeSpansPagedTimeSpans) GetTimeSpans() []TimeSpan { return v.TimeSpans }
+
+// GetCursor returns GetPagedTimeSpansTimeSpansPagedTimeSpans.Cursor, and is useful for accessing the field via an interface.
+func (v *GetPagedTimeSpansTimeSpansPagedTimeSpans) GetCursor() GetPagedTimeSpansTimeSpansPagedTimeSpansCursor {
+	return v.Cursor
+}
+
+// GetPagedTimeSpansTimeSpansPagedTimeSpansCursor includes the requested fields of the GraphQL type Cursor.
+type GetPagedTimeSpansTimeSpansPagedTimeSpansCursor struct {
+	HasMore  bool `json:"hasMore"`
+	Offset   int  `json:"offset"`
+	StartId  int  `json:"startId"`
+	PageSize int  `json:"pageSize"`
+}
+
+// GetHasMore returns GetPagedTimeSpansTimeSpansPagedTimeSpansCursor.HasMore, and is useful for accessing the field via an interface.
+func (v *GetPagedTimeSpansTimeSpansPagedTimeSpansCursor) GetHasMore() bool { return v.HasMore }
+
+// GetOffset returns GetPagedTimeSpansTimeSpansPagedTimeSpansCursor.Offset, and is useful for accessing the field via an interface.
+func (v *GetPagedTimeSpansTimeSpansPagedTimeSpansCursor) GetOffset() int { return v.Offset }
+
+// GetStartId returns GetPagedTimeSpansTimeSpansPagedTimeSpansCursor.StartId, and is useful for accessing the field via an interface.
+func (v *GetPagedTimeSpansTimeSpansPagedTimeSpansCursor) GetStartId() int { return v.StartId }
+
+// GetPageSize returns GetPagedTimeSpansTimeSpansPagedTimeSpansCursor.PageSize, and is useful for accessing the field via an interface.
+func (v *GetPagedTimeSpansTimeSpansPagedTimeSpansCursor) GetPageSize() int { return v.PageSize }
+
 // GetTimeSpansResponse is returned by GetTimeSpans on success.
 type GetTimeSpansResponse struct {
 	TimeSpans GetTimeSpansTimeSpansPagedTimeSpans `json:"timeSpans"`
@@ -183,6 +348,21 @@ func (v *GetVersionVersion) GetCommit() string { return v.Commit }
 // GetBuildDate returns GetVersionVersion.BuildDate, and is useful for accessing the field via an interface.
 func (v *GetVersionVersion) GetBuildDate() string { return v.BuildDate }
 
+type InputCursor struct {
+	Offset   int `json:"offset"`
+	StartId  int `json:"startId"`
+	PageSize int `json:"pageSize"`
+}
+
+// GetOffset returns InputCursor.Offset, and is useful for accessing the field via an interface.
+func (v *InputCursor) GetOffset() int { return v.Offset }
+
+// GetStartId returns InputCursor.StartId, and is useful for accessing the field via an interface.
+func (v *InputCursor) GetStartId() int { return v.StartId }
+
+// GetPageSize returns InputCursor.PageSize, and is useful for accessing the field via an interface.
+func (v *InputCursor) GetPageSize() int { return v.PageSize }
+
 // LoginLogin includes the requested fields of the GraphQL type Login.
 type LoginLogin struct {
 	User     LoginLoginUser `json:"user"`
@@ -223,6 +403,14 @@ type LoginResponse struct {
 // GetLogin returns LoginResponse.Login, and is useful for accessing the field via an interface.
 func (v *LoginResponse) GetLogin() LoginLogin { return v.Login }
 
+// RemoveTimeSpanResponse is returned by RemoveTimeSpan on success.
+type RemoveTimeSpanResponse struct {
+	RemoveTimeSpan TimeSpan `json:"removeTimeSpan"`
+}
+
+// GetRemoveTimeSpan returns RemoveTimeSpanResponse.RemoveTimeSpan, and is useful for accessing the field via an interface.
+func (v *RemoveTimeSpanResponse) GetRemoveTimeSpan() TimeSpan { return v.RemoveTimeSpan }
+
 // UpdateTagResponse is returned by UpdateTag on success.
 type UpdateTagResponse struct {
 	UpdateTag UpdateTagUpdateTagTagDefinition `json:"updateTag"`
@@ -238,6 +426,54 @@ type UpdateTagUpdateTagTagDefinition struct {
 
 // GetKey returns UpdateTagUpdateTagTagDefinition.Key, and is useful for accessing the field via an interface.
 func (v *UpdateTagUpdateTagTagDefinition) GetKey() string { return v.Key }
+
+// __AddDashboardEntryInput is used internally by genqlient
+type __AddDashboardEntryInput struct {
+	DashboardId int                              `json:"dashboardId"`
+	EntryType   EntryType                        `json:"entryType"`
+	Title       string                           `json:"title"`
+	Total       bool                             `json:"total"`
+	Stats       InputStatsSelection              `json:"stats"`
+	Pos         InputResponsiveDashboardEntryPos `json:"pos"`
+}
+
+// GetDashboardId returns __AddDashboardEntryInput.DashboardId, and is useful for accessing the field via an interface.
+func (v *__AddDashboardEntryInput) GetDashboardId() int { return v.DashboardId }
+
+// GetEntryType returns __AddDashboardEntryInput.EntryType, and is useful for accessing the field via an interface.
+func (v *__AddDashboardEntryInput) GetEntryType() EntryType { return v.EntryType }
+
+// GetTitle returns __AddDashboardEntryInput.Title, and is useful for accessing the field via an interface.
+func (v *__AddDashboardEntryInput) GetTitle() string { return v.Title }
+
+// GetTotal returns __AddDashboardEntryInput.Total, and is useful for accessing the field via an interface.
+func (v *__AddDashboardEntryInput) GetTotal() bool { return v.Total }
+
+// GetStats returns __AddDashboardEntryInput.Stats, and is useful for accessing the field via an interface.
+func (v *__AddDashboardEntryInput) GetStats() InputStatsSelection { return v.Stats }
+
+// GetPos returns __AddDashboardEntryInput.Pos, and is useful for accessing the field via an interface.
+func (v *__AddDashboardEntryInput) GetPos() InputResponsiveDashboardEntryPos { return v.Pos }
+
+// __AddDashboardRangeInput is used internally by genqlient
+type __AddDashboardRangeInput struct {
+	DashboardId int                 `json:"dashboardId"`
+	DateRange   InputNamedDateRange `json:"dateRange"`
+}
+
+// GetDashboardId returns __AddDashboardRangeInput.DashboardId, and is useful for accessing the field via an interface.
+func (v *__AddDashboardRangeInput) GetDashboardId() int { return v.DashboardId }
+
+// GetDateRange returns __AddDashboardRangeInput.DateRange, and is useful for accessing the field via an interface.
+func (v *__AddDashboardRangeInput) GetDateRange() InputNamedDateRange { return v.DateRange }
+
+// __CreateDashboardInput is used internally by genqlient
+type __CreateDashboardInput struct {
+	Name string `json:"name"`
+}
+
+// GetName returns __CreateDashboardInput.Name, and is useful for accessing the field via an interface.
+func (v *__CreateDashboardInput) GetName() string { return v.Name }
 
 // __CreateTagInput is used internally by genqlient
 type __CreateTagInput struct {
@@ -271,6 +507,22 @@ func (v *__CreateTimeSpanInput) GetTags() []TimeSpanTag { return v.Tags }
 // GetNote returns __CreateTimeSpanInput.Note, and is useful for accessing the field via an interface.
 func (v *__CreateTimeSpanInput) GetNote() string { return v.Note }
 
+// __GetPagedTimeSpansInput is used internally by genqlient
+type __GetPagedTimeSpansInput struct {
+	From   time.Time   `json:"from"`
+	To     time.Time   `json:"to"`
+	Cursor InputCursor `json:"cursor"`
+}
+
+// GetFrom returns __GetPagedTimeSpansInput.From, and is useful for accessing the field via an interface.
+func (v *__GetPagedTimeSpansInput) GetFrom() time.Time { return v.From }
+
+// GetTo returns __GetPagedTimeSpansInput.To, and is useful for accessing the field via an interface.
+func (v *__GetPagedTimeSpansInput) GetTo() time.Time { return v.To }
+
+// GetCursor returns __GetPagedTimeSpansInput.Cursor, and is useful for accessing the field via an interface.
+func (v *__GetPagedTimeSpansInput) GetCursor() InputCursor { return v.Cursor }
+
 // __GetTimeSpansInput is used internally by genqlient
 type __GetTimeSpansInput struct {
 	From time.Time `json:"from"`
@@ -303,6 +555,14 @@ func (v *__LoginInput) GetDeviceName() string { return v.DeviceName }
 // GetDeviceType returns __LoginInput.DeviceType, and is useful for accessing the field via an interface.
 func (v *__LoginInput) GetDeviceType() DeviceType { return v.DeviceType }
 
+// __RemoveTimeSpanInput is used internally by genqlient
+type __RemoveTimeSpanInput struct {
+	Id int `json:"id"`
+}
+
+// GetId returns __RemoveTimeSpanInput.Id, and is useful for accessing the field via an interface.
+func (v *__RemoveTimeSpanInput) GetId() int { return v.Id }
+
 // __UpdateTagInput is used internally by genqlient
 type __UpdateTagInput struct {
 	Key   string `json:"key"`
@@ -314,6 +574,123 @@ func (v *__UpdateTagInput) GetKey() string { return v.Key }
 
 // GetColor returns __UpdateTagInput.Color, and is useful for accessing the field via an interface.
 func (v *__UpdateTagInput) GetColor() string { return v.Color }
+
+// The query or mutation executed by AddDashboardEntry.
+const AddDashboardEntry_Operation = `
+mutation AddDashboardEntry ($dashboardId: Int!, $entryType: EntryType!, $title: String!, $total: Boolean!, $stats: InputStatsSelection!, $pos: InputResponsiveDashboardEntryPos) {
+	addDashboardEntry(dashboardId: $dashboardId, entryType: $entryType, title: $title, total: $total, stats: $stats, pos: $pos) {
+		id
+	}
+}
+`
+
+func AddDashboardEntry(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	dashboardId int,
+	entryType EntryType,
+	title string,
+	total bool,
+	stats InputStatsSelection,
+	pos InputResponsiveDashboardEntryPos,
+) (*AddDashboardEntryResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "AddDashboardEntry",
+		Query:  AddDashboardEntry_Operation,
+		Variables: &__AddDashboardEntryInput{
+			DashboardId: dashboardId,
+			EntryType:   entryType,
+			Title:       title,
+			Total:       total,
+			Stats:       stats,
+			Pos:         pos,
+		},
+	}
+	var err_ error
+
+	var data_ AddDashboardEntryResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
+
+// The query or mutation executed by AddDashboardRange.
+const AddDashboardRange_Operation = `
+mutation AddDashboardRange ($dashboardId: Int!, $dateRange: InputNamedDateRange!) {
+	addDashboardRange(dashboardId: $dashboardId, range: $dateRange) {
+		id
+	}
+}
+`
+
+func AddDashboardRange(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	dashboardId int,
+	dateRange InputNamedDateRange,
+) (*AddDashboardRangeResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "AddDashboardRange",
+		Query:  AddDashboardRange_Operation,
+		Variables: &__AddDashboardRangeInput{
+			DashboardId: dashboardId,
+			DateRange:   dateRange,
+		},
+	}
+	var err_ error
+
+	var data_ AddDashboardRangeResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
+
+// The query or mutation executed by CreateDashboard.
+const CreateDashboard_Operation = `
+mutation CreateDashboard ($name: String!) {
+	createDashboard(name: $name) {
+		id
+	}
+}
+`
+
+func CreateDashboard(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	name string,
+) (*CreateDashboardResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "CreateDashboard",
+		Query:  CreateDashboard_Operation,
+		Variables: &__CreateDashboardInput{
+			Name: name,
+		},
+	}
+	var err_ error
+
+	var data_ CreateDashboardResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
 
 // The query or mutation executed by CreateTag.
 const CreateTag_Operation = `
@@ -473,6 +850,143 @@ func GetCurrentUser(
 	return &data_, err_
 }
 
+// The query or mutation executed by GetDashboards.
+const GetDashboards_Operation = `
+query GetDashboards {
+	dashboards {
+		id
+		name
+		items {
+			id
+			title
+			entryType
+			total
+			statsSelection {
+				interval
+				tags
+				rangeId
+				excludeTags {
+					key
+					value
+				}
+				includeTags {
+					key
+					value
+				}
+				range {
+					from
+					to
+				}
+			}
+			pos {
+				desktop {
+					w
+					h
+					x
+					y
+					minW
+					minH
+				}
+				mobile {
+					w
+					h
+					x
+					y
+					minW
+					minH
+				}
+			}
+		}
+		ranges {
+			id
+			name
+			editable
+			range {
+				from
+				to
+			}
+		}
+	}
+}
+`
+
+func GetDashboards(
+	ctx_ context.Context,
+	client_ graphql.Client,
+) (*GetDashboardsResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "GetDashboards",
+		Query:  GetDashboards_Operation,
+	}
+	var err_ error
+
+	var data_ GetDashboardsResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
+
+// The query or mutation executed by GetPagedTimeSpans.
+const GetPagedTimeSpans_Operation = `
+query GetPagedTimeSpans ($from: Time, $to: Time, $cursor: InputCursor) {
+	timeSpans(fromInclusive: $from, toInclusive: $to, cursor: $cursor) {
+		timeSpans {
+			id
+			start
+			end
+			oldStart
+			note
+			tags {
+				key
+				value
+			}
+		}
+		cursor {
+			hasMore
+			offset
+			startId
+			pageSize
+		}
+	}
+}
+`
+
+func GetPagedTimeSpans(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	from time.Time,
+	to time.Time,
+	cursor InputCursor,
+) (*GetPagedTimeSpansResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "GetPagedTimeSpans",
+		Query:  GetPagedTimeSpans_Operation,
+		Variables: &__GetPagedTimeSpansInput{
+			From:   from,
+			To:     to,
+			Cursor: cursor,
+		},
+	}
+	var err_ error
+
+	var data_ GetPagedTimeSpansResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
+
 // The query or mutation executed by GetTimeSpans.
 const GetTimeSpans_Operation = `
 query GetTimeSpans ($from: Time, $to: Time) {
@@ -595,6 +1109,41 @@ func Login(
 	var err_ error
 
 	var data_ LoginResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
+
+// The query or mutation executed by RemoveTimeSpan.
+const RemoveTimeSpan_Operation = `
+mutation RemoveTimeSpan ($id: Int!) {
+	removeTimeSpan(id: $id) {
+		id
+	}
+}
+`
+
+func RemoveTimeSpan(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	id int,
+) (*RemoveTimeSpanResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "RemoveTimeSpan",
+		Query:  RemoveTimeSpan_Operation,
+		Variables: &__RemoveTimeSpanInput{
+			Id: id,
+		},
+	}
+	var err_ error
+
+	var data_ RemoveTimeSpanResponse
 	resp_ := &graphql.Response{Data: &data_}
 
 	err_ = client_.MakeRequest(

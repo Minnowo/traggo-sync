@@ -148,11 +148,14 @@ func CLISyncMain(c context.Context, cli *cli.Command) error {
 	run.From.Pass = passStrs[0]
 
 	run.DryRun = cli.Value("dry-run").(bool)
+	run.Dashboards = cli.Value("dashboards").(bool)
 
 	run.AllTags = cli.Value("all-tags").(bool)
 	run.MissingTags = cli.Value("missing-tags").(bool)
 
 	run.MissingTimespans = cli.Value("missing-timespans").(bool)
+	run.ReplaceTimespans = cli.Value("replace-timespans").(bool)
+	run.DeleteTimespans = false
 
 	run.StartTime = cli.Value("time-start").(time.Time)
 	run.EndTime = cli.Value("time-end").(time.Time)
@@ -248,8 +251,20 @@ func main() {
 						Required: false,
 					},
 					&cli.BoolFlag{
+						Name:     "replace-timespans",
+						Usage:    "Sync timespans from the source to the target deleting timestamps on the target which are not on the source.",
+						Value:    false,
+						Required: false,
+					},
+					&cli.BoolFlag{
 						Name:     "dry-run",
 						Aliases:  []string{"n"},
+						Usage:    "Simulate the run without making any changes to any Traggo server.",
+						Value:    false,
+						Required: false,
+					},
+					&cli.BoolFlag{
+						Name:     "dashboards",
 						Usage:    "Simulate the run without making any changes to any Traggo server.",
 						Value:    false,
 						Required: false,
